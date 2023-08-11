@@ -102,13 +102,15 @@ COPY --from=builder /usr/src/app /usr/src/app
 
 COPY . /usr/src/app
 
-RUN mkdir -p /data && chown node:node /data && chown -R node:node /home
+RUN mkdir -p /data && chown node:node /data
+RUN mkdir -p /home/node/.config/gcloud/configurations && chown -R node:node /home/node/.config/gcloud/
+RUN mkdir -p /home/node/.gsutil && chown -R node:node /home/node/.gsutil
 VOLUME /data
 WORKDIR /data
 
 EXPOSE 8080
 
-# USER node:node
+USER node:node
 
 ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"]
 

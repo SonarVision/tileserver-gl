@@ -76,14 +76,20 @@ RUN set -ex; \
       libpixman-1-0 \
       libcurl4 \
       librsvg2-2 \
-      libpango-1.0-0; \
+      libpango-1.0-0 \
+      apt-transport-https \
+      ca-certificates \
+      gnupg \
+      curl; \
       apt-get -y --purge autoremove; \
       apt-get clean; \
       rm -rf /var/lib/apt/lists/*;
 
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
+
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN wget -qO- https://deb.nodesource.com/setup_18.x | bash; \ 
+RUN wget -qO- https://deb.nodesource.com/setup_18.x | bash; \
     apt-get install -y nodejs; \
     npm i -g npm@latest; \
     apt-get -y remove wget; \
@@ -91,17 +97,18 @@ RUN wget -qO- https://deb.nodesource.com/setup_18.x | bash; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*;
 
+
 COPY --from=builder /usr/src/app /usr/src/app
 
 COPY . /usr/src/app
 
-RUN mkdir -p /data && chown node:node /data
+RUN mkdir -p /data && chown node:node /data && chown -R node:node /home
 VOLUME /data
 WORKDIR /data
 
 EXPOSE 8080
 
-USER node:node
+# USER node:node
 
 ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"]
 

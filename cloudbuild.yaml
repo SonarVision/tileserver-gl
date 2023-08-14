@@ -1,20 +1,20 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
-    args: [ '-c', 'docker pull europe-west9-docker.pkg.dev/sonarvision-c2726/cloud-run-source-deploy/sonarvision-tileserver-gl:latest || exit 0' ]
+    args: [ '-c', 'docker pull europe-west1-docker.pkg.dev/sonarvision-c2726/cloud-run-services/sonarvision-tileserver-gl:latest || exit 0' ]
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build',
-           '-t', 'europe-west9-docker.pkg.dev/sonarvision-c2726/cloud-run-source-deploy/sonarvision-tileserver-gl:latest',
-           '--cache-from', 'europe-west9-docker.pkg.dev/sonarvision-c2726/cloud-run-source-deploy/sonarvision-tileserver-gl:latest',
+           '-t', 'europe-west1-docker.pkg.dev/sonarvision-c2726/cloud-run-services/sonarvision-tileserver-gl:latest',
+           '--cache-from', 'europe-west1-docker.pkg.dev/sonarvision-c2726/cloud-run-services/sonarvision-tileserver-gl:latest',
            '.'
     ]
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'europe-west9-docker.pkg.dev/sonarvision-c2726/cloud-run-source-deploy/sonarvision-tileserver-gl']
+    args: ['push', 'europe-west1-docker.pkg.dev/sonarvision-c2726/cloud-run-services/sonarvision-tileserver-gl']
   # Deploy container image to Cloud Run
 #  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
 #    entrypoint: gcloud
 #    args: ['run', 'deploy', 'SERVICE-NAME', '--image', 'gcr.io/PROJECT_ID/IMAGE', '--region', 'REGION']
 images:
-  - europe-west9-docker.pkg.dev/sonarvision-c2726/cloud-run-source-deploy/sonarvision-tileserver-gl:latest
+  - europe-west1-docker.pkg.dev/sonarvision-c2726/cloud-run-services/sonarvision-tileserver-gl:latest
